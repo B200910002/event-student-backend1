@@ -1,14 +1,32 @@
+const jwt = require("jsonwebtoken");
+const { User, userSchema } = require('../models/User.model')
+
 exports.protect = async (req, res, next) => {
     try {
         const auth = req.headers.authorization;
+        if(!auth) {
+            throw new Error("Not authorized, please login");
+        }
+
         const token = auth.split(" ")[1];
-        req.user = await User.checkToken(token);
+        if (!token) {
+            throw new Error("Not authorized, please login");
+        }
+
+        const verified = jwt.verify(token, process.env.SECRET_TOKEN);
+        const user = await User.findById(verified._id);
+        
+        if (!user) {
+            throw new Error("Token not found or token has expired, please login");
+        }
+
+        req.user = user;
         next();
-    } catch (e) {
+    } catch (error) {
         res.status(401).json({
             title: "Unauthorized",
             status: 401,
-            detail: "Full authentication is required to access this resource",
+            detail: error.message,
             path: req.originalUrl,
             message: "error.http.401"
         });
