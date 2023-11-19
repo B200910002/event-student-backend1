@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { protect } = require('../middleware/protect');
+const { protect } = require('../middleware/middleware');
 const { User, userSchema } = require('../models/User.model');
 
 /* GET users listing. */

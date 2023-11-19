@@ -37,6 +37,6 @@ const notificationSchema = new Schema({
 }, { timestamps: true });
 
 module.exports = {
-    Notification: mongoose.model("Event", notificationSchema),
+    Notification: mongoose.model("Notification", notificationSchema),
     notificationSchema
 }

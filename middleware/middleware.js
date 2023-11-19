@@ -32,3 +32,23 @@ exports.protect = async (req, res, next) => {
         });
     }
 };
+
+exports.wrapResponse = (req, res, next) => {
+    const originalJson = res.json;
+
+    res.json = function (data) {
+        const wrappedData = {
+            data: data,
+            meta: {
+                method: req.method,
+                path: req?.originalUrl,
+                total: data?.length,
+                timestamp: new Date().toISOString(),
+            },
+        };
+
+        originalJson.call(res, wrappedData);
+    };
+
+    next();
+};

@@ -10,6 +10,11 @@ const fileUpload = require("express-fileupload");
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
+const studentRouter = require('./routes/student');
+const groupRouter = require('./routes/group');
+const eventRouter = require('./routes/event');
+const notificationRouter = require('./routes/notification');
+const { protect, wrapResponse } = require("./middleware/middleware");
 
 const app = express();
 
@@ -28,8 +33,16 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors());
 app.use(fileUpload());
 
+// middlewares
+app.use(wrapResponse);
+
+// routes
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/students', studentRouter);
+app.use('/groups', groupRouter);
+app.use('/events', eventRouter);
+app.use('/notifications', notificationRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
