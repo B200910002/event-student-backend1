@@ -8,27 +8,30 @@ const notificationSchema = new Schema({
             ref: 'Student'
         }
     ],
-    senderId: {
+    sender: {
         type: Schema.Types.ObjectId,
         ref: 'User',
-        require: true
+        required: true
     },
     message: {
-        type: String
+        type: String,
+        required: true
     },
     timestamp: {
         type: Date
     },
     status: {
-        type: String
+        type: String,
+        default: "UNREAD",
+        required: true
     },
     data: {
-        type: Object
+        type: Object,
     },
     createdBy: {
         type: Schema.Types.ObjectId,
         ref: 'User',
-        require: true
+        required: true
     },
     updatedBy: {
         type: Schema.Types.ObjectId,
