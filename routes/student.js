@@ -5,8 +5,22 @@ const { Student, studentSchema } = require('../models/Student.model')
 
 /* GET users listing. */
 router.get('/', async (req, res, next) => {
-    const students = await Student.find();
-    res.send(students);
+    try {
+        const students = await Student.find();
+        res.status(200).json(students);
+    } catch (error) {
+        res.status(400).json({ error: error.message })
+    }
+});
+
+router.get('/:studentId', async (req, res, next) => {
+    try {
+        const { studentId } = req.params;
+        const student = await Student.findById(studentId);
+        res.status(200).json(student);
+    } catch (error) {
+        res.status(400).json({ error: error.message })
+    }
 });
 
 /* POST users listing. */
