@@ -6,6 +6,8 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require("cors");
 const { connectDB } = require("./config/db");
+const { initializeRoles } = require("./models/UserRole.model");
+const { initializeUniversities } = require("./models/University.model");
 const fileUpload = require("express-fileupload");
 
 const indexRouter = require('./routes/index');
@@ -14,12 +16,16 @@ const studentRouter = require('./routes/student');
 const groupRouter = require('./routes/group');
 const eventRouter = require('./routes/event');
 const notificationRouter = require('./routes/notification');
+const universityRouter = require('./routes/university');
+
 const { protect, wrapResponse } = require("./middleware/middleware");
 
 const app = express();
 
 // database connection
 connectDB();
+initializeRoles();
+initializeUniversities();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -38,11 +44,12 @@ app.use(wrapResponse);
 
 // routes
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
-app.use('/students', studentRouter);
-app.use('/groups', groupRouter);
-app.use('/events', eventRouter);
-app.use('/notifications', notificationRouter);
+app.use('/api/users', usersRouter);
+app.use('/api/students', studentRouter);
+app.use('/api/groups', groupRouter);
+app.use('/api/events', eventRouter);
+app.use('/api/notifications', notificationRouter);
+app.use('/api/universities', universityRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

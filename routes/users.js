@@ -12,8 +12,8 @@ router.get('/', protect, async (req, res, next) => {
 /* POST users listing. */
 router.post('/register', async (req, res, next) => {
   try {
-    const { firstname, lastName, email, phone, password } = req.body;
-    const response = await User.register(firstname, lastName, email, phone, password);
+    const { firstname, lastName, email, phone, role, password } = req.body;
+    const response = await User.register(firstname, lastName, email, phone, role, password);
     res.status(201).json("Register successfully you can login now");
   } catch (e) {
     res.status(401).json({ error: e.message });
@@ -50,6 +50,17 @@ router.patch("/change-password", protect, async (req, res, next) => {
       newPassword,
       repeatNewPassword
     );
+    res.status(200).json(repsonse);
+  } catch (e) {
+    res.status(401).json({ error: e.message });
+  }
+});
+
+/* PATCH users listing. */
+router.delete("/:userId", protect, async (req, res, next) => {
+  try {
+    const { userId } = req.params;
+    const repsonse = await User.findByIdAndDelete(userId);
     res.status(200).json(repsonse);
   } catch (e) {
     res.status(401).json({ error: e.message });

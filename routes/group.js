@@ -4,19 +4,19 @@ const { protect } = require('../middleware/middleware');
 const { Group, groupSchema } = require('../models/Group.model');
 
 /* GET listing. */
-router.get('/', async (req, res, next) => {
+router.get('/', protect, async (req, res, next) => {
     try {
-        const groups = await Group.find();
+        const groups = await Group.find({createdBy: req.user.id});
         res.status(200).json(groups);
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
 });
 
-router.get('/:groupId', async (req, res, next) => {
+router.get('/:groupId', protect, async (req, res, next) => {
     try {
         const { groupId } = req.params
-        const group = await Group.findById(groupId);
+        const group = await Group.findOne({_id: groupId, createdBy: req.user.id});
         res.status(200).json(group);
     } catch (error) {
         res.status(400).json({ error: error.message });

@@ -4,6 +4,8 @@ const validator = require('validator');
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 
+const { Role } = require('./UserRole.model');
+
 const userSchema = new Schema({
     firstName: {
         type: String,
@@ -48,19 +50,30 @@ const userSchema = new Schema({
             }
         ]
     },
+    role: {
+        type: Schema.Types.ObjectId,
+        ref: "Role",
+        required: true
+    },
     password: {
         type: String,
         required: true
     },
 }, { timestamps: true });
 
-userSchema.statics.register = async function (fname, lName, email, phone, password) {
+userSchema.statics.register = async function (fname, lName, email, phone, role, password) {
+    const existRole = await Role.findById(role._id);
+    if(!existRole) {
+        throw new Error("Role not found");
+    }
+
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await this.create({
         firstName: fname,
         lastName: lName,
         email: email,
         phone: phone,
+        role: existRole.id,
         password: hashedPassword
     });
 
@@ -73,7 +86,7 @@ userSchema.statics.login = async function (email, password) {
 
     if (user && isPasswordValid) {
         return jwt.sign(
-            { _id: user._id, email: user.email },
+            { _id: user._id, firstName: user.firstName, lastName: user.lastName, email: user.email, role: user.role },
             process.env.SECRET_TOKEN,
             { expiresIn: "1d" }
         );

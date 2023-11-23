@@ -4,19 +4,19 @@ const { protect } = require('../middleware/middleware');
 const { Event, eventSchema } = require('../models/Event.model');
 
 /* GET listing. */
-router.get('/', async (req, res, next) => {
+router.get('/', protect, async (req, res, next) => {
     try {
-        const events = await Event.find();
+        const events = await Event.find({ createdBy: req.user.id });
         res.status(200).json(events);
     } catch (error) {
         res.status(400).json({ error: error.message })
     }
 });
 
-router.get('/:eventId', async (req, res, next) => {
+router.get('/:eventId', protect, async (req, res, next) => {
     try {
         const { eventId } = req.params;
-        const event = await Event.findById(eventId);
+        const event = await Event.findOne({ _id: eventId, createdBy: req.user.id });
         res.status(200).json(event);
     } catch (error) {
         res.status(400).json({ error: error.message })

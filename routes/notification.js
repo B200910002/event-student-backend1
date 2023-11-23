@@ -5,9 +5,9 @@ const { Notification, notificationSchema } = require('../models/Notification.mod
 const { Student, studentSchema } = require('../models/Student.model');
 
 /* GET listing. */
-router.get('/', async (req, res, next) => {
+router.get('/', protect, async (req, res, next) => {
     try {
-        const notifications = await Notification.find();
+        const notifications = await Notification.find({createdBy: req.user.id});
         res.status(200).json(notifications);
     } catch (error) {
         res.status(400).json({ error: error.message });
