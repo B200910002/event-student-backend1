@@ -50,6 +50,9 @@ const userSchema = new Schema({
             }
         ]
     },
+    about: {
+        type: String
+    },
     role: {
         type: Schema.Types.ObjectId,
         ref: "Role",

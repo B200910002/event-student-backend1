@@ -30,11 +30,34 @@ router.post("/login", async (req, res, next) => {
   }
 });
 
-/* PUT users listing. */
-router.put("/edit", protect, async (req, res, next) => {
-  try {
+router.post("/upload-picture", protect, (req, res, next) => {
+  let sampleFile;
+  let uploadPath;
 
-    res.status(200).json({ token });
+  if (!req.files || Object.keys(req.files).length === 0) {
+    return res.status(400).send("No files were upload.");
+  }
+
+  sampleFile = req.files.photo;
+  uploadPath = process.cwd() + "/public/images/" + sampleFile.name;
+
+  sampleFile.mv(uploadPath, function (err) {
+    if (err) return res.status(500).send(err);
+    res.send(process.env.LOCAL_HOST_PORT + "public/images/" + sampleFile.name);
+  });
+});
+
+/* PUT users listing. */
+router.put("/edit/:userId", protect, async (req, res, next) => {
+  try {
+    const { userId } = req.params;
+    const { firstName, lastName, profile, email, phone, about } = req.body;
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { firstName, lastName, profile, email, phone, about },
+      { new: true }
+    );
+    res.status(200).json(user);
   } catch (e) {
     res.status(400).json({ error: e.message });
   }
