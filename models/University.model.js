@@ -10,8 +10,17 @@ const universitySchema = new Schema({
         type: String,
         unique: true,
         required: true
-    }
-});
+    },
+    createdBy: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    },
+    updatedBy: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    },
+}, { timestamps: true });
 
 const University = mongoose.model("University", universitySchema);
 

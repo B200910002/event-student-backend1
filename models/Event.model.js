@@ -33,7 +33,7 @@ const eventSchema = new Schema({
     createdBy: {
         type: Schema.Types.ObjectId,
         ref: 'User',
-        require: true
+        required: true
     },
     updatedBy: {
         type: Schema.Types.ObjectId,

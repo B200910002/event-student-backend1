@@ -15,7 +15,7 @@ router.get('/', async (req, res, next) => {
 
 router.get('/:universityId', protect, async (req, res, next) => {
     try {
-        const {universityId} = req.params;
+        const { universityId } = req.params;
         const university = await University.findById(universityId);
         res.status(200).json(university);
     } catch (error) {
@@ -26,38 +26,52 @@ router.get('/:universityId', protect, async (req, res, next) => {
 /* POST users listing. */
 router.post('/', protect, isAdmin, async (req, res, next) => {
     try {
-        const universities = await University.find();
-        res.status(200).json(universities);
+        const { name, abbreviatedName } = req.body;
+        const university = await University.create({ name, abbreviatedName });
+        res.status(200).json(university);
     } catch (error) {
         res.status(400).json({ error: error.message })
     }
 });
 
 /* PUT users listing. */
-router.put('/', protect, async (req, res, next) => {
+router.put('/:universityId', protect, isAdmin, async (req, res, next) => {
     try {
-        const universities = await University.find();
-        res.status(200).json(universities);
+        const { universityId } = req.params;
+        const { name, abbreviatedName } = req.body;
+        const university = await University.findByIdAndUpdate(
+            universityId,
+            { name, abbreviatedName },
+            { new: true }
+        );
+        res.status(200).json(university);
     } catch (error) {
         res.status(400).json({ error: error.message })
     }
 });
 
 /* PATCH users listing. */
-router.patch('/', protect, async (req, res, next) => {
+router.patch('/:universityId', protect, isAdmin, async (req, res, next) => {
     try {
-        const universities = await University.find();
-        res.status(200).json(universities);
+        const { universityId } = req.params;
+        const { name, abbreviatedName } = req.body;
+        const university = await University.findByIdAndUpdate(
+            universityId,
+            { name, abbreviatedName },
+            { new: true }
+        );
+        res.status(200).json(university);
     } catch (error) {
         res.status(400).json({ error: error.message })
     }
 });
 
 /* DELETE users listing. */
-router.delete('/', protect, async (req, res, next) => {
+router.delete('/:universityId', protect, isAdmin, async (req, res, next) => {
     try {
-        const universities = await University.find();
-        res.status(200).json(universities);
+        const { universityId } = req.params;
+        const university = await University.findByIdAndDelete(universityId);
+        res.status(200).json(university);
     } catch (error) {
         res.status(400).json({ error: error.message })
     }
