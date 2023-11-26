@@ -2,12 +2,18 @@ const express = require('express');
 const router = express.Router();
 const { protect } = require('../middleware/middleware');
 const { User, userSchema } = require('../models/User.model');
+const { Role, roleSchema } = require('../models/UserRole.model');
 
 /* GET users listing. */
 router.get('/', protect, async (req, res, next) => {
   const users = await User.find();
-  res.send(users);
+  res.status(200).json(users);
 });
+
+router.get('/roles', async (req, res, next) => {
+  const roles = await Role.find();
+  res.status(200).json(roles);
+})
 
 /* POST users listing. */
 router.post('/register', async (req, res, next) => {
