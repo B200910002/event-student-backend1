@@ -66,7 +66,7 @@ const userSchema = new Schema({
 
 userSchema.statics.register = async function (fname, lName, email, phone, role, password) {
     const existRole = await Role.findById(role._id);
-    if(!existRole) {
+    if (!existRole) {
         throw new Error("Role not found");
     }
 
@@ -80,7 +80,11 @@ userSchema.statics.register = async function (fname, lName, email, phone, role, 
         password: hashedPassword
     });
 
-    return user;
+    return jwt.sign(
+        { _id: user._id, firstName: user.firstName, lastName: user.lastName, email: user.email, role: user.role },
+        process.env.SECRET_TOKEN,
+        { expiresIn: "1d" }
+    );
 };
 
 userSchema.statics.login = async function (email, password) {
