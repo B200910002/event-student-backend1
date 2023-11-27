@@ -6,13 +6,29 @@ const { Role, roleSchema } = require('../models/UserRole.model');
 
 /* GET users listing. */
 router.get('/', protect, async (req, res, next) => {
-  const users = await User.find();
-  res.status(200).json(users);
+  try {
+    const users = await User.find();
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(400).json({error: error.message});
+  }
 });
 
 router.get('/roles', async (req, res, next) => {
-  const roles = await Role.find();
-  res.status(200).json(roles);
+  try {
+    const roles = await Role.find();
+    res.status(200).json(roles);
+  } catch (error) {
+    res.status(400).json({error: error.message});
+  }
+})
+
+router.get('/my-account', protect, async (req, res, next) => {
+  try {
+    res.status(200).json(req.user);
+  } catch (error) {
+    res.status(400).json({error: error.message});
+  }
 })
 
 /* POST users listing. */
