@@ -18,8 +18,8 @@ router.get('/roles', async (req, res, next) => {
 /* POST users listing. */
 router.post('/register', async (req, res, next) => {
   try {
-    const { firstname, lastName, email, phone, role, password } = req.body;
-    const response = await User.register(firstname, lastName, email, phone, role, password);
+    const { firstName, lastName, email, phone, role, password } = req.body;
+    const token = await User.register(firstName, lastName, email, phone, role, password);
     res.status(201).json("Register successfully you can login now");
   } catch (e) {
     res.status(401).json({ error: e.message });
@@ -81,7 +81,7 @@ router.patch("/change-password", protect, async (req, res, next) => {
     );
     res.status(200).json(repsonse);
   } catch (e) {
-    res.status(401).json({ error: e.message });
+    res.status(400).json({ error: e.message });
   }
 });
 
