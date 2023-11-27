@@ -10,7 +10,7 @@ router.get('/', protect, async (req, res, next) => {
     const users = await User.find();
     res.status(200).json(users);
   } catch (error) {
-    res.status(400).json({error: error.message});
+    res.status(400).json({ error: error.message });
   }
 });
 
@@ -19,15 +19,18 @@ router.get('/roles', async (req, res, next) => {
     const roles = await Role.find();
     res.status(200).json(roles);
   } catch (error) {
-    res.status(400).json({error: error.message});
+    res.status(400).json({ error: error.message });
   }
 })
 
 router.get('/my-account', protect, async (req, res, next) => {
   try {
-    res.status(200).json(req.user);
+    const user = req.user;
+    const role = await Role.findById(user.role);
+    user.role = role;
+    res.status(200).json(user);
   } catch (error) {
-    res.status(400).json({error: error.message});
+    res.status(400).json({ error: error.message });
   }
 })
 

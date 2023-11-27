@@ -87,7 +87,7 @@ userSchema.statics.register = async function (fname, lName, email, phone, role, 
             lastName: user?.lastName, 
             email: user?.email,
             phone: user?.phone,
-            role: user?.role,
+            role: existRole,
             about: user?.about,
             profile: user?.profile
         },
@@ -99,6 +99,7 @@ userSchema.statics.register = async function (fname, lName, email, phone, role, 
 userSchema.statics.login = async function (email, password) {
     const user = await this.findOne({ email: email });
     const isPasswordValid = await bcrypt.compare(password, user.password);
+    const role = await Role.findById(user.role);
 
     if (user && isPasswordValid) {
         return jwt.sign(
@@ -108,7 +109,7 @@ userSchema.statics.login = async function (email, password) {
                 lastName: user?.lastName, 
                 email: user?.email,
                 phone: user?.phone,
-                role: user?.role,
+                role: role,
                 about: user?.about,
                 profile: user?.profile
             },
