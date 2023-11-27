@@ -76,10 +76,10 @@ router.post("/upload-picture", protect, (req, res, next) => {
 router.put("/edit/:userId", protect, async (req, res, next) => {
   try {
     const { userId } = req.params;
-    const { firstName, lastName, profile, email, phone, about } = req.body;
+    const { firstName, lastName, profile, email, role, phone, about } = req.body;
     const user = await User.findByIdAndUpdate(
       userId,
-      { firstName, lastName, profile, email, phone, about },
+      { firstName, lastName, profile, email, role, phone, about },
       { new: true }
     );
     res.status(200).json(user);
