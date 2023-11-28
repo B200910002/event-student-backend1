@@ -77,6 +77,7 @@ router.put("/edit/:userId", protect, async (req, res, next) => {
   try {
     const { userId } = req.params;
     const { firstName, lastName, profile, email, role, phone, about } = req.body;
+    console.log(req.files);
     const user = await User.findByIdAndUpdate(
       userId,
       { firstName, lastName, profile, email, role, phone, about },
