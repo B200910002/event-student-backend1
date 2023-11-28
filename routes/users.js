@@ -55,26 +55,6 @@ router.post("/login", async (req, res, next) => {
   }
 });
 
-router.post("/upload-picture", protect, (req, res, next) => {
-  let sampleFile;
-  let uploadPath;
-
-  if (!req.files || Object.keys(req.files).length === 0) {
-    return res.status(400).send("No files were upload.");
-  }
-
-  sampleFile = req.files.photo;
-  uploadPath = process.cwd() + "/public/images/" + sampleFile.name;
-
-  console.log(sampleFile)
-  console.log(uploadPath)
-
-  sampleFile.mv(uploadPath, function (err) {
-    if (err) return res.status(500).send(err);
-    res.send(process.env.HOST_PORT + "/images/" + sampleFile.name);
-  });
-});
-
 /* PUT users listing. */
 router.put("/edit/:userId", protect, async (req, res, next) => {
   try {

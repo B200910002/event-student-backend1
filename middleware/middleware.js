@@ -74,3 +74,24 @@ exports.wrapResponse = (req, res, next) => {
 
     next();
 };
+
+exports.uploadImage = (req, res, next) => {
+    try {
+        let sampleFile;
+        let uploadPath;
+
+        if (!req.files || Object.keys(req.files).length === 0) {
+            return res.status(400).send("No files were upload.");
+        }
+
+        sampleFile = req.files.image;
+        uploadPath = process.cwd() + "/public/images/" + sampleFile.name;
+
+        sampleFile.mv(uploadPath, function (err) {
+            if (err) return res.status(500).send(err);
+            res.send(process.env.HOST_PORT + "/images/" + sampleFile.name);
+        });
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+}
