@@ -64,7 +64,10 @@ router.post("/upload-picture", protect, (req, res, next) => {
   }
 
   sampleFile = req.files.photo;
-  uploadPath = process.env.HOST_PORT + "/public/images/" + sampleFile.name;
+  uploadPath = process.cwd() + "/public/images/" + sampleFile.name;
+
+  console.log(sampleFile)
+  console.log(uploadPath)
 
   sampleFile.mv(uploadPath, function (err) {
     if (err) return res.status(500).send(err);
