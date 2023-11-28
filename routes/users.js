@@ -64,11 +64,11 @@ router.post("/upload-picture", protect, (req, res, next) => {
   }
 
   sampleFile = req.files.photo;
-  uploadPath = process.cwd() + "/public/images/" + sampleFile.name;
+  uploadPath = process.env.HOST_PORT + "/public/images/" + sampleFile.name;
 
   sampleFile.mv(uploadPath, function (err) {
     if (err) return res.status(500).send(err);
-    res.send(process.env.LOCAL_HOST_PORT + "public/images/" + sampleFile.name);
+    res.send(process.env.HOST_PORT + "/public/images/" + sampleFile.name);
   });
 });
 
