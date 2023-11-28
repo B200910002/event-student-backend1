@@ -71,7 +71,7 @@ router.post("/upload-picture", protect, (req, res, next) => {
 
   sampleFile.mv(uploadPath, function (err) {
     if (err) return res.status(500).send(err);
-    res.send(process.env.HOST_PORT + "/public/images/" + sampleFile.name);
+    res.send(process.env.HOST_PORT + "/images/" + sampleFile.name);
   });
 });
 
