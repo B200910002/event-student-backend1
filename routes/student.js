@@ -26,7 +26,7 @@ router.get('/:studentId', async (req, res, next) => {
 router.get('/by-student-code/:studentCode', async (req, res, next) => {
     try {
         const { studentCode } = req.params;
-        const student = await Student.findOne({studentCode: studentCode});
+        const student = await Student.findOne({studentCode: studentCode.toUpperCase()});
         res.status(200).json(student);
     } catch (error) {
         res.status(400).json({ error: error.message })
