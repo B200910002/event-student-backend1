@@ -2,11 +2,22 @@ const express = require('express');
 const router = express.Router();
 const { protect } = require('../middleware/middleware');
 const { Group, groupSchema } = require('../models/Group.model');
+const { University, universitySchema } = require('../models/University.model');
+const { User, userSchema } = require('../models/User.model');
 
 /* GET listing. */
 router.get('/', protect, async (req, res, next) => {
     try {
-        const groups = await Group.find({createdBy: req.user.id});
+        const groups = await Group.find({ createdBy: req.user.id });
+        groups.map(async (group) => {
+            const university = await University.findById(group.university);
+            const createdBy = await User.findById(group.createdBy);
+            const updatedBy = await User.findById(group.updatedBy);
+
+            group.university = university.name;
+            group.createdBy = createdBy.firstName;
+            group.updatedBy = updatedBy.firstName;
+        });
         res.status(200).json(groups);
     } catch (error) {
         res.status(400).json({ error: error.message });
@@ -16,7 +27,7 @@ router.get('/', protect, async (req, res, next) => {
 router.get('/:groupId', protect, async (req, res, next) => {
     try {
         const { groupId } = req.params
-        const group = await Group.findOne({_id: groupId, createdBy: req.user.id});
+        const group = await Group.findOne({ _id: groupId, createdBy: req.user.id });
         res.status(200).json(group);
     } catch (error) {
         res.status(400).json({ error: error.message });
