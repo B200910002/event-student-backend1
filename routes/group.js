@@ -9,7 +9,7 @@ const { User, userSchema } = require('../models/User.model');
 router.get('/', protect, async (req, res, next) => {
     try {
         const groups = await Group.find({ createdBy: req.user.id });
-        groups.map(async (group) => {
+        for(const group of groups) {
             const university = await University.findById(group.university);
             const createdBy = await User.findById(group.createdBy);
             const updatedBy = await User.findById(group.updatedBy);
@@ -17,7 +17,7 @@ router.get('/', protect, async (req, res, next) => {
             group.university = university.name;
             group.createdBy = createdBy.firstName;
             group.updatedBy = updatedBy.firstName;
-        });
+        };
         res.status(200).json(groups);
     } catch (error) {
         res.status(400).json({ error: error.message });
