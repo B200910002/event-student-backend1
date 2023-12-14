@@ -9,16 +9,27 @@ const { User, userSchema } = require('../models/User.model');
 router.get('/', protect, async (req, res, next) => {
     try {
         const groups = await Group.find({ createdBy: req.user.id });
-        for(let group of groups) {
+        const responseGroups = [];
+        for(const group of groups) {
+            const gr = {};
             const university = await University.findById(group.university);
             const createdBy = await User.findById(group.createdBy);
             const updatedBy = await User.findById(group.updatedBy);
 
-            group.university = university.name;
-            group.createdBy = createdBy.firstName;
-            group.updatedBy = updatedBy.firstName;
+            gr._id = group._id;
+            gr.name = group.name;
+            gr.description = group.description;
+            gr.students = group.students;
+            gr.university = university?.name;
+            gr.createdBy = createdBy?.firstName;
+            gr.updatedBy = updatedBy?.firstName;
+            gr.createdAt = group.createdAt;
+            gr.updatedAt = group.updatedAt;
+            gr.__v = group.__v;
+
+            responseGroups.push(gr);
         };
-        res.status(200).json(groups);
+        res.status(200).json(responseGroups);
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
