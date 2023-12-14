@@ -9,7 +9,7 @@ const { User, userSchema } = require('../models/User.model');
 router.get('/', protect, async (req, res, next) => {
     try {
         const groups = await Group.find({ createdBy: req.user.id });
-        for(const group of groups) {
+        for(let group of groups) {
             const university = await University.findById(group.university);
             const createdBy = await User.findById(group.createdBy);
             const updatedBy = await User.findById(group.updatedBy);
