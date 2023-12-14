@@ -26,11 +26,12 @@ router.get('/:groupId', protect, async (req, res, next) => {
 /* POST listing. */
 router.post('/', protect, async (req, res, next) => {
     try {
-        const { name, description, students } = req.body;
+        const { name, description, students, university } = req.body;
         const group = await Group.create({
             name: name,
             description: description,
             students: students,
+            university: university,
             createdBy: req.user.id,
             updatedBy: req.user.id
         });
@@ -44,10 +45,10 @@ router.post('/', protect, async (req, res, next) => {
 router.put('/:groupId', protect, async (req, res, next) => {
     try {
         const { groupId } = req.params;
-        const { name, description } = req.body;
+        const { name, description, university } = req.body;
         const group = await Group.findByIdAndUpdate(
             groupId,
-            { name, description, updatedBy: req.user.id },
+            { name, description, university, updatedBy: req.user.id },
             { new: true }
         );
         res.status(200).json(group);

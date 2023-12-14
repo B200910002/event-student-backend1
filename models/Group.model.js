@@ -15,6 +15,10 @@ const groupSchema = new Schema({
             ref: 'Student'
         }
     ],
+    university: {
+        type: Schema.Types.ObjectId,
+        ref: 'University'
+    },
     createdBy: {
         type: Schema.Types.ObjectId,
         ref: 'User',
